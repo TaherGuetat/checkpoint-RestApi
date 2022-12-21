@@ -46,11 +46,49 @@ const createOne = (req, res) => {
 };
 
 const updateOne = (req, res) => {
-  // const{id}=req.params
-  // const{body}=req
+  const{id}=req.params
+  const{body}=req
+  if(!req.body){
+    return res.status(400).send({
+      message: "Data to update can not be empty!"
+    });
+  }
+  User.findByIdAndUpdate(id,req.body)
+  .then(user=>{
+    if(!user)
+      res.status(404).send({message:'cannot update'})
+      User.username=body.username
+  User.save()
+  .then(()=>res.status(201).send({message:'user is updated successfully'}))  
+  .catch((err)=>res.status(500).send(err))
+  })
+  .catch(err=>{
+    res.status(500).send({
+      message:'Error updating user'
+    })
+  })
 };
 
-const deleteOne = (req, res) => {};
+const deleteOne = (req, res) => {
+  const{id}=req.params
+  findByIdAndRemove(id)
+    .then(user => {
+      if (!user) {
+        res.status(404).send({
+          message: `Cannot delete. Maybe user was not found!`
+        });
+      } else {
+        res.send({
+          message: "user was deleted successfully!"
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete user"
+      });
+    });
+};
 
 // creating routes
 const Router = require("express");
