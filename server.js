@@ -53,17 +53,19 @@ const updateOne = (req, res) => {
       message: "Data to update can not be empty!"
     });
   }
-  User.findByIdAndUpdate(id,req.body)
+  User.findByIdAndUpdate(id,{...req.body},{new:true})
   .then(user=>{
-    if(!user)
-      res.status(404).send({message:'cannot update'})
-      User.username=body.username
-  User.save()
-  .then(()=>res.status(201).send({message:'user is updated successfully'}))  
-  .catch((err)=>res.status(500).send(err))
+    if(!user){
+     return res.status(404).send({message:'cannot update'})
+    }
+    else{
+      return  res.status(201).send({message:'user is updated successfully',user})
+    }
+  
   })
   .catch(err=>{
-    res.status(500).send({
+    console.log(err)
+   return res.status(500).send({
       message:'Error updating user'
     })
   })
@@ -71,20 +73,20 @@ const updateOne = (req, res) => {
 
 const deleteOne = (req, res) => {
   const{id}=req.params
-  findByIdAndRemove(id)
+  User.findByIdAndRemove(id)
     .then(user => {
       if (!user) {
-        res.status(404).send({
+       return res.status(404).send({
           message: `Cannot delete. Maybe user was not found!`
         });
       } else {
-        res.send({
+       return res.send({
           message: "user was deleted successfully!"
         });
       }
     })
     .catch(err => {
-      res.status(500).send({
+     return res.status(500).send({
         message: "Could not delete user"
       });
     });
